@@ -117,7 +117,10 @@ property:   '-' _NAME '=' definition
                 printf("<%s>%s</%s>\n", $2, $4, $2);
             }
             | '-' _TEXTRTF_STR '=' _STRING_LITERAL ';'
-            | definition
+            {
+                printf("<_textRTF><![CDATA[%s]]></_textRTF>\n", $4);
+            }
+             | definition
             ;
 
 numbers:    { $$ = _strdup(""); }
