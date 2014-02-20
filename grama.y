@@ -90,18 +90,23 @@ property:   '-' _NAME '=' definition
             }
             | '-' _NAME '=' _GUID_STR _GUID ';'
             {
-                printf("<%s>%s</%s>", $2, $5, $2);
+                printf("<%s>GUID %s</%s>", $2, $5, $2);
             }
             | '-' _NAME '=' _OLDID_STR numbers ';'
+            {
+                printf("<%s>OLDID %s</%s>\n", $2, $5, $2);
+            }
             | '-' _NAME '=' _CGTIME ';'
             {
                 printf("<%s>%s</%s>\n", $2, $4, $2);
             }
             | '-' _NAME '=' _STRING_LITERAL numbers ';'
+            {
+                printf("<%s>%s %s</%s>\n", $2, $4, $5, $2);
+            }
             | '-' _NAME '=' _STRING_LITERAL ';'
             {
-                const char* str_4 = strip_string_quotes($4);
-                printf("<%s><![CDATA[%s]]></%s>\n", $2, str_4, $2);
+                printf("<%s><![CDATA[%s]]></%s>\n", $2, $4, $2);
             }
             | '-' _NAME '=' _TYPE_CHAR ';'
             {
