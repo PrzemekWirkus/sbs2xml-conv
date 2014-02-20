@@ -15,12 +15,14 @@ void yyerror(const char*);
     const char* str_string_literal;
     const char* str_guid;
     const char* str_cgtime;
+    const char* str_type_char;
 };
 
 %type <str_name> _NAME
 %type <str_string_literal> _STRING_LITERAL
 %type <str_guid> _GUID
 %type <str_cgtime> _CGTIME
+%type <str_type_char> _TYPE_CHAR
 
 %token _INT
 %token _FLOAT
@@ -44,7 +46,6 @@ sbs:        sbs_header
             {
                 const char * header = "<?xml version=\"1.0\" ?>\n";
                 printf(header);
-                // collect_data_output(header);
             }
             definitions
             ;
@@ -76,6 +77,8 @@ property:   '-' _NAME '=' definition
             | '-' _NAME '=' _GUID_STR _GUID ';'
             {
                 printf("<%s>%s</%s>", $2, $5, $2);
+                free((void*)$2);
+                free((void*)$5);
             }
             | '-' _NAME '=' _OLDID_STR numbers ';'
             | '-' _NAME '=' _CGTIME ';'
@@ -92,8 +95,18 @@ property:   '-' _NAME '=' definition
                 free((void*)$2);
                 free((void*)$4);
             }
-            | '-' _NAME '=' _NAME ';'
             | '-' _NAME '=' _TYPE_CHAR ';'
+            {
+                printf("<%s>%s</%s>\n", $2, $4, $2);
+                free((void*)$2);
+                free((void*)$4);
+            }
+            | '-' _NAME '=' _NAME ';'
+            {
+                printf("<%s>%s</%s>\n", $2, $4, $2);
+                free((void*)$2);
+                free((void*)$4);
+            }
             | '-' _TEXTRTF_STR '=' _STRING_LITERAL ';'
             | definition
             ;

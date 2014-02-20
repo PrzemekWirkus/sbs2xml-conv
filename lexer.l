@@ -74,7 +74,10 @@ TYPE_CHAR                 "'"[FT ]{1}"'"
 
 {EBRACE}                        return _EBRACE;
 
-{TYPE_CHAR}                     return _TYPE_CHAR;
+{TYPE_CHAR}                     {
+                                    yylval.str_type_char = _strdup(yytext);
+                                    return _TYPE_CHAR;
+                                }
 
 [-=;]                           return *yytext;
 
