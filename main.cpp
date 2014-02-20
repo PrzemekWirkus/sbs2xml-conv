@@ -1,7 +1,11 @@
+/******************************************************************************
+    SBS to XML simple converter.
+    Author: Przemyslaw Wirkus
+******************************************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <iostream>
-#include <fstream>
+#include <string.h>
 
 extern "C"
 {
@@ -41,6 +45,17 @@ extern "C"
                 default: printf("%c", c);
             }
         }
+    }
+    
+    // Creates new string with prefix
+    char* string_add_front(const char* prefix, const char* delimiter, char* str)
+    {
+        const int total_len = strlen(prefix) + strlen(str) + strlen(delimiter) + 1;
+        char* result = (char*)malloc(total_len * sizeof(char));
+        strcpy(result, prefix);
+        strcat(result, delimiter);
+        strcat(result, str);
+        return result;
     }
 }
 

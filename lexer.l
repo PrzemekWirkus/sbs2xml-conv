@@ -34,9 +34,15 @@ TYPE_CHAR                 "'"[FT ]{1}"'"
 
 %%
 
-{INT}                           return _INT;
+{INT}                           {
+                                    yylval.str_int = _strdup(yytext);
+                                    return _INT;
+                                }
 
-{FLOAT}                         return _FLOAT;
+{FLOAT}                         {
+                                    yylval.str_float = _strdup(yytext);
+                                    return _FLOAT;
+                                }
 
 {GUID}                          {
                                     yylval.str_string_literal = _strdup(yytext);

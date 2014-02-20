@@ -7,6 +7,8 @@
 int yylex(void);
 void yyerror(const char*);
 
+char* string_add_front(const char* prefix, const char* delimiter, const char* str);
+
 %}
 
 %union
@@ -16,6 +18,10 @@ void yyerror(const char*);
     const char* str_guid;
     const char* str_cgtime;
     const char* str_type_char;
+    const char* str_int;
+    const char* str_float;
+    char* str_number;
+    char* str_numbers;
 };
 
 %type <str_name> _NAME
@@ -23,6 +29,11 @@ void yyerror(const char*);
 %type <str_guid> _GUID
 %type <str_cgtime> _CGTIME
 %type <str_type_char> _TYPE_CHAR
+%type <str_int> _INT
+%type <str_float> _FLOAT
+
+%type <str_number> number
+%type <str_numbers> numbers
 
 %token _INT
 %token _FLOAT
@@ -74,51 +85,54 @@ properties:
 
 property:   '-' _NAME '=' definition
             | '-' _NAME '=' numbers ';'
+            {
+                printf("<%s>%s</%s>", $2, $4, $2);
+            }
             | '-' _NAME '=' _GUID_STR _GUID ';'
             {
                 printf("<%s>%s</%s>", $2, $5, $2);
-                free((void*)$2);
-                free((void*)$5);
             }
             | '-' _NAME '=' _OLDID_STR numbers ';'
             | '-' _NAME '=' _CGTIME ';'
             {
                 printf("<%s>%s</%s>\n", $2, $4, $2);
-                free((void*)$2);
-                free((void*)$4);
             }
             | '-' _NAME '=' _STRING_LITERAL numbers ';'
             | '-' _NAME '=' _STRING_LITERAL ';'
             {
                 const char* str_4 = strip_string_quotes($4);
                 printf("<%s><![CDATA[%s]]></%s>\n", $2, str_4, $2);
-                free((void*)$2);
-                free((void*)$4);
             }
             | '-' _NAME '=' _TYPE_CHAR ';'
             {
                 printf("<%s>%s</%s>\n", $2, $4, $2);
-                free((void*)$2);
-                free((void*)$4);
             }
             | '-' _NAME '=' _NAME ';'
             {
                 printf("<%s>%s</%s>\n", $2, $4, $2);
-                free((void*)$2);
-                free((void*)$4);
             }
             | '-' _TEXTRTF_STR '=' _STRING_LITERAL ';'
             | definition
             ;
 
-numbers:
-            | numbers number
+numbers:    { $$ = _strdup(""); }
+            | numbers number 
+            {
+                if ($1[0] == '\0')
+                {
+                    $$ = _strdup($2); 
+                }
+                else
+                {
+                    $$ = string_add_front($1, " ", $2); 
+                }
+            }
             ;
 
-number:     _INT
-            | '-' _INT
-            | _FLOAT
-            | '-' _FLOAT
+number:     _INT            { $$ = $1; }
+            | '-' _INT      { $$ = string_add_front("-", "", $2); }
+            | _FLOAT        { $$ = $1; }
+            | '-' _FLOAT    { $$ = string_add_front("-", "", $2); }
             ;
 
 %%
