@@ -75,7 +75,6 @@ definition: _OBRACE _NAME
             properties _EBRACE
             {
                 printf("</%s>\n", $2);
-                free((void*)$2);
             }
            ;
 
@@ -83,7 +82,7 @@ properties:
             | properties property
             ;
 
-property:   '-' _NAME '=' definition
+property:   '-' _NAME '=' { printf("<%s>", $2); } definition { printf("</%s>\n", $2); }
             | '-' _NAME '=' numbers ';'
             {
                 printf("<%s>%s</%s>", $2, $4, $2);
