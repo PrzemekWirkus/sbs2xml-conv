@@ -65,7 +65,10 @@ TYPE_CHAR                 "'"[FT ]{1}"'"
                                     return _NAME;
                                 }
 
-{CGTIME}                        return _CGTIME;
+{CGTIME}                        {
+                                    yylval.str_cgtime = _strdup(yytext);
+                                    return _CGTIME;
+                                }
 
 {OBRACE}                        return _OBRACE;
 

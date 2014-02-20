@@ -14,11 +14,13 @@ void yyerror(const char*);
     const char* str_name;
     const char* str_string_literal;
     const char* str_guid;
+    const char* str_cgtime;
 };
 
 %type <str_name> _NAME
 %type <str_string_literal> _STRING_LITERAL
 %type <str_guid> _GUID
+%type <str_cgtime> _CGTIME
 
 %token _INT
 %token _FLOAT
@@ -73,11 +75,15 @@ property:   '-' _NAME '=' definition
             | '-' _NAME '=' numbers ';'
             | '-' _NAME '=' _GUID_STR _GUID ';'
             {
-                printf("<_id>%s</_id>", $5);
+                printf("<%s>%s</%s>", $2, $5, $2);
             }
-
             | '-' _NAME '=' _OLDID_STR numbers ';'
             | '-' _NAME '=' _CGTIME ';'
+            {
+                printf("<%s>%s</%s>\n", $2, $4, $2);
+                free((void*)$2);
+                free((void*)$4);
+            }
             | '-' _NAME '=' _STRING_LITERAL numbers ';'
             | '-' _NAME '=' _STRING_LITERAL ';'
             {
