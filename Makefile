@@ -1,9 +1,16 @@
 # Project sbs2xml
-# 
+#
 # About:
 # Simple parser which will convert your IBM Rhapsody SBS files to XML format.
 #
 # Usage:
+#
+# To compile and build whole project:
+#   make all
+#
+# To convert 'myfile.sbs' to simple XML output
+#   cat myfile.sbs | sbs2xml
+#   cat myfile.sbs | sbs2xml > myfile.xml
 #
 # Notes:
 # YY_BUF_SIZE is too small to parse bigger SBS files so we need to change it
